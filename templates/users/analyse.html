@@ -1,0 +1,434 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .dataset-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2.5rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .dataset-container h2 {
+        color: #1e3a8a;
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .dataset-container h2::before {
+        content: '📁';
+        font-size: 2rem;
+    }
+    .dataset-container h4 {
+        color: #1e3a8a;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 2px solid #e0e7ff;
+        padding-bottom: 0.8rem;
+    }
+    .dataset-container p {
+        font-size: 1.1rem;
+        color: #1e293b;
+        margin-bottom: 0.8rem;
+        line-height: 1.6;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    .form-control {
+        background: #f8f9fa;
+        border: 2px solid #e0e7ff;
+        border-radius: 8px;
+        padding: 0.9rem;
+        font-size: 1rem;
+        color: #1e293b;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+    }
+    .form-control:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+        outline: none;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border: none;
+        padding: 1rem 2.5rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4);
+    }
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        padding: 1rem 2.5rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .btn-success:hover {
+        background: linear-gradient(135deg, #34d399, #10b981);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+    }
+    .alert-info {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(79, 172, 254, 0.05));
+        border-left: 4px solid #3b82f6;
+        border-radius: 8px;
+        padding: 1.5rem;
+        font-size: 1rem;
+        color: #1e293b;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+        white-space: pre-line;
+        line-height: 1.7;
+    }
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 1.5rem;
+        border: 1px solid #e0e7ff;
+    }
+    
+    /* Table Styling */
+    .dataset-container table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+    }
+    .dataset-container table thead {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        font-weight: 600;
+    }
+    .dataset-container table th {
+        padding: 1rem 0.75rem;
+        text-align: center;
+        border-bottom: 2px solid #e0e7ff;
+    }
+    .dataset-container table td {
+        padding: 0.75rem;
+        text-align: center;
+        border-bottom: 1px solid #e0e7ff;
+        background: #f8f9fa;
+    }
+    .dataset-container table tbody tr:nth-child(even) td {
+        background: #ffffff;
+    }
+    .dataset-container table tbody tr:hover td {
+        background: #eff6ff;
+        transition: background 0.2s ease;
+    }
+    
+    /* Table Wrapper for Responsiveness */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+        border: 1px solid #e0e7ff;
+        margin-top: 1rem;
+    }
+    
+    /* Heatmap Container */
+    .heatmap-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e0e7ff;
+        margin-top: 1.5rem;
+    }
+    
+    .heatmap-container img {
+        max-width: 90%;
+        height: auto;
+        border-radius: 8px;
+    }
+    
+    /* AI Insights Styling */
+    .ai-insights-container {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(34, 197, 94, 0.05));
+        border-left: 5px solid #10b981;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-top: 2rem;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+    .ai-insights-title {
+        color: #047857;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        border-bottom: 2px solid #10b981;
+        padding-bottom: 1rem;
+    }
+    .ai-insights-content {
+        color: #1e293b;
+        line-height: 1.8;
+        font-size: 1rem;
+        white-space: pre-line;
+        word-wrap: break-word;
+    }
+    .ai-insights-content section {
+        margin-bottom: 1.5rem;
+    }
+    .ai-insights-content strong {
+        color: #047857;
+        font-size: 1.1rem;
+    }
+    .ai-insights-content ul, .ai-insights-content ol {
+        margin-left: 2rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .ai-insights-content li {
+        margin-bottom: 0.6rem;
+        line-height: 1.6;
+    }
+    .dashboard-btn-container {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .dashboard-btn-container a {
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        .dataset-container {
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        .dataset-container h2 {
+            font-size: 1.8rem;
+        }
+        .dataset-container h2::before {
+            font-size: 1.6rem;
+        }
+        .dataset-container h4 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+        }
+        .ai-insights-container {
+            padding: 1.5rem;
+        }
+        .ai-insights-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .ai-insights-content {
+            font-size: 0.95rem;
+        }
+        .dashboard-btn-container {
+            flex-direction: column;
+        }
+        .dashboard-btn-container a {
+            width: 100%;
+        }
+        .dashboard-btn-container .btn-success {
+            width: 100%;
+        }
+        .dataset-container p {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .form-group label {
+            font-size: 1rem;
+        }
+        .form-control {
+            font-size: 0.9rem;
+            padding: 0.8rem;
+        }
+        .btn-primary, .btn-success {
+            width: 100%;
+            padding: 0.9rem;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .alert-info {
+            font-size: 0.95rem;
+            padding: 1rem;
+        }
+        .dataset-container table {
+            font-size: 0.85rem;
+        }
+        .dataset-container table th,
+        .dataset-container table td {
+            padding: 0.6rem 0.5rem;
+        }
+        .heatmap-container {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="dataset-container">
+    <h2>Dataset Analysis</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="form-group">
+        {% csrf_token %}
+        <div class="form-group">
+            <label><b>Select a Dataset File (CSV, Excel, or TSV):</b></label>
+            <input type="file" name="dataset" required class="form-control mt-2">
+        </div>
+        <button type="submit" class="btn-primary">Analyze Dataset</button>
+    </form>
+
+    {% if columns %}
+    <div class="mt-4">
+        <h4><span style="font-size: 1.4rem;">🔎</span> Dataset Info</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                <p style="margin: 0.5rem 0;"><b>📊 Shape:</b> {{ shape.0 }} rows × {{ shape.1 }} columns</p>
+                <p style="margin: 0.5rem 0;"><b>🔢 Numeric Columns:</b> {{ data_quality.numeric_cols|length }}</p>
+                <p style="margin: 0.5rem 0;"><b>📝 Categorical Columns:</b> {{ data_quality.categorical_cols|length }}</p>
+            </div>
+            <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                <p style="margin: 0.5rem 0;">
+                    {% if data_quality.has_nulls %}
+                        <b style="color: #dc2626;">⚠️ Null Values Found:</b> {{ data_quality.null_count }} ({{ data_quality.null_percentage }}%)
+                    {% else %}
+                        <b style="color: #10b981;">✅ No Null Values</b> - Data is clean!
+                    {% endif %}
+                </p>
+                <p style="margin: 0.5rem 0;">
+                    {% if data_quality.is_balanced %}
+                        <b style="color: #10b981;">✅ Data is Balanced</b> - Good for ML
+                    {% else %}
+                        <b style="color: #f59e0b;">⚠️ Data is Imbalanced</b> - May need handling
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <p style="margin-top: 1.5rem; color: #1e293b;"><b>📋 Columns:</b> {{ columns|join:", " }}</p>
+    </div>
+    {% endif %}
+
+    {% if data_quality.imbalance_info %}
+    <div class="mt-4" style="background: #eff6ff; padding: 1.5rem; border-radius: 10px; border: 1px solid #bfdbfe;">
+        <h4 style="color: #1e3a8a; margin-bottom: 1rem;">⚖️ Class Distribution Analysis</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            {% for col, info in data_quality.imbalance_info.items %}
+            <div style="background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-weight: 600; color: #1e3a8a;">{{ col }}</p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                    {% if info.is_balanced %}
+                        ✅ Balanced (Ratio: {{ info.ratio|floatformat:2 }})
+                    {% else %}
+                        ⚠️ Imbalanced (Ratio: {{ info.ratio|floatformat:2 }})
+                    {% endif %}
+                </p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; color: #666;">
+                    Classes: {{ info.counts|length }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-4" style="background: linear-gradient(135deg, #e0f2fe, #f0fdf4); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #06b6d4;">
+        <h4 style="color: #0c4a6e; margin-bottom: 1rem;">🤖 Recommended ML Models for Prediction</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #cffafe; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <p style="margin: 0; font-weight: 600; color: #0c4a6e;">📊 Classification</p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                    • Logistic Regression<br>
+                    • Random Forest<br>
+                    • Gradient Boosting
+                </p>
+            </div>
+            <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #cffafe; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <p style="margin: 0; font-weight: 600; color: #0c4a6e;">📈 Regression</p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                    • Linear Regression<br>
+                    • Decision Trees<br>
+                    • XGBoost
+                </p>
+            </div>
+            <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #cffafe; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <p style="margin: 0; font-weight: 600; color: #0c4a6e;">🔗 Clustering</p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                    • K-Means<br>
+                    • DBSCAN<br>
+                    • Hierarchical
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if describe_html %}
+    <div class="mt-4">
+        <h4><span style="font-size: 1.4rem;">📈</span> Descriptive Statistics</h4>
+        <div class="table-wrapper">
+            {{ describe_html|safe }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if heatmap %}
+    <div class="mt-5">
+        <h4><span style="font-size: 1.4rem;">🔗</span> Correlation Heatmap</h4>
+        <div class="heatmap-container">
+            <img src="data:image/png;base64,{{ heatmap }}" class="img-fluid" alt="Correlation Heatmap">
+        </div>
+    </div>
+    {% endif %}
+
+    {% if ai_insight %}
+    <div class="ai-insights-container">
+        <h3 class="ai-insights-title">
+            <span style="font-size: 2rem;">🤖</span> AI-Powered Dataset Analysis & ML Recommendations
+        </h3>
+        <div class="ai-insights-content">
+            {{ ai_insight }}
+        </div>
+        <div class="dashboard-btn-container">
+            <a href="{% url 'dashboard_view' %}" class="btn-success">📊 View Interactive Dashboard ➜</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

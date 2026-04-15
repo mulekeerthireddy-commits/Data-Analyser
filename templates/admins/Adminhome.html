@@ -1,0 +1,82 @@
+{% extends 'admins/Adminbase.html' %}
+
+{% block content %}
+<style>
+    .admin-dashboard {
+        background: #ffffff;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        max-width: 900px;
+        margin: 2rem auto;
+        text-align: center;
+        animation: floatIn 1s ease-out;
+    }
+
+    .admin-dashboard h2 {
+        color: #2B2D42;
+        margin-bottom: 1rem;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+
+    .admin-dashboard p {
+        color: #444;
+        font-size: 1.15rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .admin-dashboard .btn {
+        display: inline-block;
+        margin: 0.5rem;
+        padding: 0.8rem 1.6rem;
+        font-weight: 600;
+        background: #FFD6A5;
+        color: #333;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-dashboard .btn:hover {
+        background: #B9FBC0;
+        color: #1a1a1a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes floatIn {
+        from { transform: translateY(40px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+        .admin-dashboard {
+            padding: 1.5rem;
+        }
+
+        .admin-dashboard h2 {
+            font-size: 1.8rem;
+        }
+
+        .admin-dashboard p {
+            font-size: 1rem;
+        }
+
+        .admin-dashboard .btn {
+            width: 100%;
+            margin-bottom: 0.75rem;
+        }
+    }
+</style>
+
+<div class="admin-dashboard">
+    <h2>Welcome, {{ request.session.loggeduser }}</h2>
+    <p>Harness the power of Generative AI to analyze data and generate insightful documentation effortlessly.</p>
+
+    <!-- <a href="{% url 'generate_docs' %}" class="btn">Generate Documentation</a>
+    <a href="{% url 'UserLogin' %}" class="btn">Logout</a> -->
+</div>
+{% endblock %}

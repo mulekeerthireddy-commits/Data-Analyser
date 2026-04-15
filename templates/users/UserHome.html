@@ -1,0 +1,62 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .user-home-box {
+        background-color: white;
+        padding: 2rem;
+        margin-top: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .user-home-box h2 {
+        color: #1e3a8a;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .user-home-box p {
+        font-size: 1.1rem;
+        color: #4b5563;
+        margin-bottom: 2rem;
+    }
+
+    .user-home-box .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        margin: 0.5rem;
+        font-weight: bold;
+        background-color: #3b82f6;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    .user-home-box .btn:hover {
+        background-color: #1e3a8a;
+    }
+
+    @media (max-width: 600px) {
+        .user-home-box h2 {
+            font-size: 1.6rem;
+        }
+        .user-home-box p {
+            font-size: 1rem;
+        }
+        .user-home-box .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="user-home-box">
+    <h2>Welcome, {{ request.session.loggeduser }}</h2>
+    <p>Use the button below to generate high-quality API documentation using our AI-powered engine.</p>
+    
+    <!-- <a href="#" class="btn">Generate Documentation</a>
+    <a href="#" class="btn">Logout</a>  {# Replace this with actual logout URL if available #} -->
+</div>
+{% endblock %}

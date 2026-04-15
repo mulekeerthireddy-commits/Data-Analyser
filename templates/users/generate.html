@@ -1,0 +1,171 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .generate-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2.5rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .generate-title {
+        color: #1e3a8a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .generate-form {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e0e7ff;
+        margin-top: 1.5rem;
+    }
+    .form-group-custom {
+        margin-bottom: 1.5rem;
+    }
+    .form-group-custom label {
+        display: block;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        font-size: 1.05rem;
+    }
+    .form-group-custom textarea,
+    .form-group-custom input[type="file"] {
+        width: 100%;
+        padding: 0.9rem;
+        border: 2px solid #e0e7ff;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: 'Segoe UI', sans-serif;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-group-custom textarea:focus,
+    .form-group-custom input[type="file"]:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+        outline: none;
+    }
+    .generate-btn {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        padding: 1rem 2.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .generate-btn:hover {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+    .response-container {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(79, 172, 254, 0.05));
+        border-left: 4px solid #3b82f6;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+    .response-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .response-text {
+        color: #1e293b;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .image-container {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e0e7ff;
+        margin-top: 2rem;
+        text-align: center;
+    }
+    .image-container h4 {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+    .image-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0e7ff;
+    }
+    @media (max-width: 768px) {
+        .generate-container {
+            padding: 1.5rem;
+        }
+        .generate-title {
+            font-size: 1.8rem;
+        }
+        .generate-form {
+            padding: 1.5rem;
+        }
+        .form-group-custom textarea,
+        .form-group-custom input[type="file"] {
+            font-size: 0.95rem;
+            padding: 0.8rem;
+        }
+        .generate-btn {
+            width: 100%;
+            padding: 0.9rem;
+        }
+    }
+</style>
+
+<div class="generate-container">
+    <h2 class="generate-title">🤖 AI Discord Bot (Text + Image)</h2>
+
+    <form method="post" enctype="multipart/form-data" class="generate-form">
+        {% csrf_token %}
+
+        <div class="form-group-custom">
+            <label><strong>Text Prompt:</strong></label>
+            <textarea name="text_prompt" rows="5" placeholder="Enter your prompt..." required></textarea>
+        </div>
+
+        <div class="form-group-custom">
+            <label><strong>Image Prompt (optional):</strong></label>
+            <input type="file" name="image_prompt" accept="image/*">
+        </div>
+
+        <button type="submit" class="generate-btn">Generate Response</button>
+    </form>
+
+    {% if response_text %}
+        <div class="response-container">
+            <h3 class="response-title">🔍 AI Response:</h3>
+            <div class="response-text">{{ response_text }}</div>
+        </div>
+    {% endif %}
+
+    {% if uploaded_image_url %}
+        <div class="image-container">
+            <h4>🖼️ Uploaded Image:</h4>
+            <img src="{{ uploaded_image_url }}" alt="Uploaded Image">
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

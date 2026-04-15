@@ -1,0 +1,117 @@
+{% extends 'users/Userbase.html' %}
+{% block content %}
+<style>
+    .dashboard-header {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    .back-button {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+    }
+    .back-button a {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .back-button a:hover {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+    .dashboard-title {
+        color: #1e3a8a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .dashboard-title::before {
+        content: '📊';
+        font-size: 2rem;
+    }
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    .chart-container {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid #e0e7ff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.3s ease;
+    }
+    .chart-container:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+    .alert-warning {
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(245, 158, 11, 0.05));
+        border-left: 4px solid #f59e0b;
+        border-radius: 8px;
+        padding: 1.5rem;
+        color: #1e293b;
+        font-size: 1rem;
+    }
+    @media (max-width: 1024px) {
+        .dashboard-title {
+            font-size: 1.8rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .dashboard-title {
+            font-size: 1.6rem;
+        }
+        .chart-container {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="dashboard-header">
+    <h2 class="dashboard-title">Interactive EDA Dashboard</h2>
+    <div class="back-button">
+        <a href="{% url back_url %}">← Back to Analysis</a>
+    </div>
+</div>
+
+<hr style="border: 1px solid #e0e7ff; margin: 2rem 0;">
+
+{% if charts %}
+    <div class="charts-grid">
+        {% for chart in charts %}
+            <div class="chart-container" id="chart{{ forloop.counter }}"></div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        <strong>ℹ️ No chart data available.</strong> Please analyze a dataset first.
+    </div>
+{% endif %}
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    // Responsive chart configuration
+    window.addEventListener('resize', function() {
+        {% for chart in charts %}
+            Plotly.Plots.resize("chart{{ forloop.counter }}");
+        {% endfor %}
+    });
+
+    {% for chart in charts %}
+        var chartData{{ forloop.counter }} = {{ chart|safe }};
+        chartData{{ forloop.counter }}.layout.responsive = true;
+        chartData{{ forloop.counter }}.layout.autosize = true;
+        Plotly.newPlot("chart{{ forloop.counter }}", chartData{{ forloop.counter }}.data, chartData{{ forloop.counter }}.layout, {responsive: true});
+    {% endfor %}
+</script>
+{% endblock %}
